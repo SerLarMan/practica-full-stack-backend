@@ -18,15 +18,6 @@ const getMovieByName = async (req, res, next) => {
   }
 };
 
-const getMovieByGenre = async (req, res, next) => {
-  try {
-    const movies = await Movie.find({ genre: req.params.genre });
-    return res.status(200).json(movies);
-  } catch (error) {
-    next(error);
-  }
-};
-
 const addMovie = async (req, res, next) => {
   try {
     const newMovie = new Movie(req.body);
@@ -67,7 +58,6 @@ const deleteMovie = async (req, res, next) => {
 module.exports = {
   getMovies,
   getMovieByName,
-  getMovieByGenre,
   addMovie,
   updateMovie,
   deleteMovie,

@@ -1,7 +1,6 @@
 const {
   getMovies,
   getMovieByName,
-  getMovieByGenre,
   addMovie,
   updateMovie,
   deleteMovie,
@@ -11,9 +10,8 @@ const { isAuth } = require("../../middleware/auth");
 
 const movieRouter = require("express").Router();
 
-movieRouter.get("/", isAuth, getMovies);
-movieRouter.get("/name/:name", isAuth, getMovieByName);
-movieRouter.get("/genre/:genre", isAuth, getMovieByGenre);
+movieRouter.get("/", getMovies);
+movieRouter.get("/name/:name", getMovieByName);
 movieRouter.post("/", isAuth, addMovie);
 movieRouter.put("/:id", isAuth, updateMovie);
 movieRouter.delete("/:id", isAuth, deleteMovie);

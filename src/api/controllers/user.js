@@ -28,7 +28,7 @@ const registerUser = async (req, res, next) => {
     const userExists = await User.findOne({ email: user.email });
 
     if (userExists) {
-      return res.status(400).json("Ya existe un usuario con este email");
+      return res.status(400).json("A user with this email already exists");
     }
 
     const userDB = await user.save();
@@ -43,14 +43,14 @@ const loginUser = async (req, res, next) => {
     const user = await User.findOne({ email: req.body.email });
 
     if (!user) {
-      return res.status(400).json("Contraseña o usuario incorrecto");
+      return res.status(400).json("Wrong email or password");
     }
 
     if (bcrypt.compareSync(req.body.password, user.password)) {
       const token = generateToken(user._id, user.email);
-      return res.status(200).json(token);
+      return res.status(200).json({ token, user });
     } else {
-      return res.status(400).json("Contraseña o usuario incorrecto");
+      return res.status(400).json("Wrong email or password");
     }
   } catch (error) {
     next(error);
@@ -62,7 +62,7 @@ const updateUser = async (req, res, next) => {
     const { id } = req.params;
 
     if (req.user._id.toString() !== id) {
-      return res.status(400).json("Solo puedes modificar tu usuario");
+      return res.status(400).json("You can only modify your user");
     }
 
     const user = await User.findById(id);
