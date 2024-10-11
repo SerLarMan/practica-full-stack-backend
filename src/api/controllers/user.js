@@ -15,7 +15,7 @@ const getUserById = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const user = await User.findById(id).populate("myList");
+    const user = await User.findById(id).populate("tickets");
     return res.status(200).json(user);
   } catch (error) {
     next(error);
@@ -25,7 +25,13 @@ const getUserById = async (req, res, next) => {
 const registerUser = async (req, res, next) => {
   try {
     const user = new User(req.body);
-    const userExists = await User.findOne({ email: user.email });
+    const userExists = await User.findOne({ email: user.email }).populate({
+      path: "tickets",
+      populate: {
+        path: "film",
+        select: "name",
+      },
+    });
 
     if (userExists) {
       return res.status(400).json("A user with this email already exists");
@@ -40,7 +46,13 @@ const registerUser = async (req, res, next) => {
 
 const loginUser = async (req, res, next) => {
   try {
-    const user = await User.findOne({ email: req.body.email });
+    const user = await User.findOne({ email: req.body.email }).populate({
+      path: "tickets",
+      populate: {
+        path: "film",
+        select: "name",
+      },
+    });
 
     if (!user) {
       return res.status(400).json("Wrong email or password");
@@ -68,7 +80,7 @@ const updateUser = async (req, res, next) => {
     const user = await User.findById(id);
     const newUser = new User(req.body);
     newUser._id = id;
-    newUser.myList = [...user.myList, ...newUser.myList];
+    newUser.tickets = [...user.tickets, ...newUser.tickets];
 
     if (newUser.password) {
       newUser.password = bcrypt.hashSync(newUser.password, 10);
@@ -83,4 +95,22 @@ const updateUser = async (req, res, next) => {
   }
 };
 
-module.exports = { getUsers, getUserById, registerUser, loginUser, updateUser };
+const deleteuser = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    await User.findByIdAndDelete(id);
+    return res.status(200).json("User deleted");
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = {
+  getUsers,
+  getUserById,
+  registerUser,
+  loginUser,
+  updateUser,
+  deleteuser,
+};

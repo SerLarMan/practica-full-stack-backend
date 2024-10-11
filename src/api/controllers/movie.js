@@ -9,6 +9,17 @@ const getMovies = async (req, res, next) => {
   }
 };
 
+const getMovieById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const movie = await Movie.findById(id);
+    return res.status(200).json(movie);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getMovieByName = async (req, res, next) => {
   try {
     const movies = await Movie.find({ name: req.params.name });
@@ -57,6 +68,7 @@ const deleteMovie = async (req, res, next) => {
 
 module.exports = {
   getMovies,
+  getMovieById,
   getMovieByName,
   addMovie,
   updateMovie,

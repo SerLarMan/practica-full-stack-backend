@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema(
       default: "user",
       enum: ["admin", "user"],
     },
-    myList: [{ type: mongoose.Types.ObjectId, ref: "Movie" }],
+    tickets: [{ type: mongoose.Types.ObjectId, ref: "Ticket" }],
   },
   {
     timestamps: true,

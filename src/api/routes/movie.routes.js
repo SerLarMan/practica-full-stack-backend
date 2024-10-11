@@ -1,5 +1,6 @@
 const {
   getMovies,
+  getMovieById,
   getMovieByName,
   addMovie,
   updateMovie,
@@ -11,6 +12,7 @@ const { isAuth } = require("../../middleware/auth");
 const movieRouter = require("express").Router();
 
 movieRouter.get("/", getMovies);
+movieRouter.get("/:id", getMovieById);
 movieRouter.get("/name/:name", getMovieByName);
 movieRouter.post("/", isAuth, addMovie);
 movieRouter.put("/:id", isAuth, updateMovie);

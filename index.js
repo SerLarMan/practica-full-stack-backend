@@ -1,9 +1,10 @@
 require("dotenv").config();
 const express = require("express");
-const cors = require("cors")
+const cors = require("cors");
 const { connectDB } = require("./src/config/database");
 const userRoutes = require("./src/api/routes/user.routes");
 const movieRoutes = require("./src/api/routes/movie.routes");
+const ticketRoutes = require("./src/api/routes/ticket.routes");
 
 // Data base connection
 connectDB();
@@ -16,6 +17,7 @@ app.use(cors());
 
 app.use("/users", userRoutes);
 app.use("/movies", movieRoutes);
+app.use("/tickets", ticketRoutes);
 
 app.use("*", (req, res, next) => {
   const error = new Error("Route not found");
