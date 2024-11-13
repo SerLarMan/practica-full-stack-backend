@@ -3,8 +3,8 @@ const express = require("express");
 const cors = require("cors");
 const { connectDB } = require("./src/config/database");
 const userRoutes = require("./src/api/routes/user.routes");
-const movieRoutes = require("./src/api/routes/movie.routes");
-const ticketRoutes = require("./src/api/routes/ticket.routes");
+const concertRoutes = require("./src/api/routes/concert.routes");
+const locationRoutes = require("./src/api/routes/location.routes");
 
 // Data base connection
 connectDB();
@@ -16,8 +16,8 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/users", userRoutes);
-app.use("/movies", movieRoutes);
-app.use("/tickets", ticketRoutes);
+app.use("/concerts", concertRoutes);
+app.use("/locations", locationRoutes);
 
 app.use("*", (req, res, next) => {
   const error = new Error("Route not found");
