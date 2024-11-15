@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "nodemon index.js",
-    "seed": "node ./src/utils/seeds/location.seed.js"
+    "seed": "node ./src/utils/seeds/generate.seed.js"
   },
   "devDependencies": {
     "nodemon": "^3.1.7"

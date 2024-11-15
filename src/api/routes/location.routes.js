@@ -9,9 +9,9 @@ const { isAuth } = require("../../middleware/auth");
 
 const locationRouter = require("express").Router();
 
-locationRouter.get("/", isAuth, getLocations);
-locationRouter.post("/", isAuth, addLocation);
-locationRouter.put("/:id", isAuth, updateLocation);
-locationRouter.delete("/:id", isAuth, deleteLocation);
+locationRouter.get("/", getLocations);
+locationRouter.post("/", addLocation);
+locationRouter.put("/:id", updateLocation);
+locationRouter.delete("/:id", deleteLocation);
 
 module.exports = locationRouter;

@@ -13,7 +13,13 @@ const getConcertById = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const concert = await Concert.findById(id);
+    const concert = await Concert.findById(id).populate({
+      path: "schedule",
+      populate: {
+        path: "location",
+        model: "Location",
+      },
+    });
     return res.status(200).json(concert);
   } catch (error) {
     next(error);

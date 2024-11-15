@@ -5,6 +5,7 @@ const { connectDB } = require("./src/config/database");
 const userRoutes = require("./src/api/routes/user.routes");
 const concertRoutes = require("./src/api/routes/concert.routes");
 const locationRoutes = require("./src/api/routes/location.routes");
+const scheduleRoutes = require("./src/api/routes/schedules.routes");
 
 // Data base connection
 connectDB();
@@ -18,6 +19,7 @@ app.use(cors());
 app.use("/users", userRoutes);
 app.use("/concerts", concertRoutes);
 app.use("/locations", locationRoutes);
+app.use("/schedules", scheduleRoutes);
 
 app.use("*", (req, res, next) => {
   const error = new Error("Route not found");
