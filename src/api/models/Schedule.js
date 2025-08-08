@@ -2,8 +2,14 @@ const mongoose = require("mongoose");
 
 const scheduleSchema = new mongoose.Schema(
   {
-    location: { type: mongoose.Types.ObjectId, ref: "Location" },
     date: { type: Date, trim: true, required: true },
+    concert: { type: mongoose.Types.ObjectId, ref: "Concert", required: true },
+    location: {
+      type: mongoose.Types.ObjectId,
+      ref: "Location",
+      required: true,
+    },
+    price: { type: Number, required: true },
   },
   {
     timestamps: true,

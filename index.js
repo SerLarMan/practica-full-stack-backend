@@ -6,6 +6,7 @@ const userRoutes = require("./src/api/routes/user.routes");
 const concertRoutes = require("./src/api/routes/concert.routes");
 const locationRoutes = require("./src/api/routes/location.routes");
 const scheduleRoutes = require("./src/api/routes/schedules.routes");
+const ticketRoutes = require("./src/api/routes/ticket.routes");
 
 // Data base connection
 connectDB();
@@ -20,6 +21,7 @@ app.use("/users", userRoutes);
 app.use("/concerts", concertRoutes);
 app.use("/locations", locationRoutes);
 app.use("/schedules", scheduleRoutes);
+app.use("/tickets", ticketRoutes);
 
 app.use("*", (req, res, next) => {
   const error = new Error("Route not found");

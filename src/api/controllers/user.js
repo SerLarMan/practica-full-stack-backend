@@ -46,13 +46,13 @@ const registerUser = async (req, res, next) => {
 
 const loginUser = async (req, res, next) => {
   try {
-    const user = await User.findOne({ email: req.body.email }).populate({
+    const user = await User.findOne({ email: req.body.email }); /* .populate({
       path: "tickets",
       populate: {
         path: "film",
         select: "name",
       },
-    });
+    }); */
 
     if (!user) {
       return res.status(400).json("Wrong email or password");

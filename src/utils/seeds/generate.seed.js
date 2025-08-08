@@ -13,7 +13,7 @@ const concerts = require("../../data/concerts");
 
 const seedDatabase = async () => {
   try {
-    await mongoose.connect(process.env.DB_URL);
+    await mongoose.connect(process.env.MONGODB_URI);
     console.log("Connected to database");
 
     // Limpiar colecciones
@@ -36,35 +36,24 @@ const seedDatabase = async () => {
       insertedLocations.map((loc) => [loc.name, loc._id])
     );
 
-    // Insertar schedules con referencias a locations
-    const schedulesWithLocation = schedules.map((schedule) => ({
-      location: locationMap.get(schedule.locationName),
-      date: new Date(schedule.date),
-    }));
-    const insertedSchedules = await Schedule.insertMany(schedulesWithLocation);
-    console.log("Schedules added:", insertedSchedules);
+    //Insertar Conciertos
+    const insertedConcerts = await Concert.insertMany(concerts);
+    console.log("Concerts added:", insertedConcerts);
 
-    // Crear un mapa compuesto para identificar schedules por fecha y location
-    const scheduleMap = new Map(
-      insertedSchedules.map((schedule) => [
-        `${schedule.date.toISOString().split("T")[0]}_${schedule.location}`,
-        schedule._id,
-      ])
+    //Crear un mapa para localizar IDs por artista
+    const concertMap = new Map(
+      insertedConcerts.map((concert) => [concert.artist, concert._id])
     );
 
-    // Insertar concerts con referencias a schedules
-    const concertsWithSchedules = concerts.map((concert) => ({
-      ...concert,
-      schedule: concert.scheduleDetails
-        .map((detail) =>
-          scheduleMap.get(
-            `${detail.date}_${locationMap.get(detail.locationName)}`
-          )
-        )
-        .filter(Boolean), // Ignorar detalles no válidos
+    // Insertar schedules con referencias a locations y concerts
+    const schedulesWithInfo = schedules.map((schedule) => ({
+      date: new Date(schedule.date),
+      concert: concertMap.get(schedule.concertArtist),
+      location: locationMap.get(schedule.locationName),
+      price: schedule.price,
     }));
-    const insertedConcerts = await Concert.insertMany(concertsWithSchedules);
-    console.log("Concerts added:", insertedConcerts);
+    const insertedSchedules = await Schedule.insertMany(schedulesWithInfo);
+    console.log("Schedules added:", insertedSchedules);
   } catch (error) {
     console.error("Error seeding database:", error);
   } finally {

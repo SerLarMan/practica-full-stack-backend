@@ -2,7 +2,9 @@ const Schedule = require("../models/Schedule");
 
 const getSchedules = async (req, res, next) => {
   try {
-    const schedules = await Schedule.find();
+    const schedules = await Schedule.find()
+      .populate("concert")
+      .populate("location");
     return res.status(200).json(schedules);
   } catch (error) {
     next(error);

@@ -12,7 +12,7 @@ const concertRouter = require("express").Router();
 
 concertRouter.get("/", getConcerts);
 concertRouter.get("/:id", getConcertById);
-concertRouter.post("/", addConcert);
+concertRouter.post("/", isAuth, addConcert);
 concertRouter.put("/:id", updateConcert);
 concertRouter.delete("/:id", deleteConcert);
 
