@@ -11,6 +11,21 @@ const getSchedules = async (req, res, next) => {
   }
 };
 
+const getScheduleByConcertId = async (req, res, next) => {
+  try {
+    const { concertId } = req.params;
+
+    const schedules = await Schedule.find({ concert: concertId }, null, {
+      sort: { date: 1 },
+    })
+      .populate("concert")
+      .populate("location");
+    return res.status(200).json(schedules);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const addSchedule = async (req, res, next) => {
   try {
     const newSchedule = new Schedule(req.body);
@@ -51,6 +66,7 @@ const deleteSchedule = async (req, res, next) => {
 
 module.exports = {
   getSchedules,
+  getScheduleByConcertId,
   addSchedule,
   updateSchedule,
   deleteSchedule,
