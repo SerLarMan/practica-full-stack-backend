@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const { generateToken } = require("../../utils/token");
+const { deleteImgCloudinary } = require("../../utils/deleteCloudinary");
 
 const getUsers = async (req, res, next) => {
   try {
@@ -15,7 +16,7 @@ const getUserById = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const user = await User.findById(id).populate("tickets");
+    const user = await User.findById(id);
     return res.status(200).json(user);
   } catch (error) {
     next(error);
@@ -25,16 +26,14 @@ const getUserById = async (req, res, next) => {
 const registerUser = async (req, res, next) => {
   try {
     const user = new User(req.body);
-    const userExists = await User.findOne({ email: user.email }).populate({
-      path: "tickets",
-      populate: {
-        path: "film",
-        select: "name",
-      },
-    });
+    const userExists = await User.findOne({ email: user.email });
 
     if (userExists) {
       return res.status(400).json("A user with this email already exists");
+    }
+
+    if(req.file) {
+      user.image = req.file.path;
     }
 
     const userDB = await user.save();
@@ -46,13 +45,7 @@ const registerUser = async (req, res, next) => {
 
 const loginUser = async (req, res, next) => {
   try {
-    const user = await User.findOne({ email: req.body.email }); /* .populate({
-      path: "tickets",
-      populate: {
-        path: "film",
-        select: "name",
-      },
-    }); */
+    const user = await User.findOne({ email: req.body.email });
 
     if (!user) {
       return res.status(400).json("Wrong email or password");
@@ -77,10 +70,16 @@ const updateUser = async (req, res, next) => {
       return res.status(400).json("You can only modify your user");
     }
 
-    const user = await User.findById(id);
     const newUser = new User(req.body);
     newUser._id = id;
-    newUser.tickets = [...user.tickets, ...newUser.tickets];
+
+    if(req.file) {
+      const existingUser = await User.findById(id);
+      if (existingUser.image) {
+        deleteImgCloudinary(existingUser.image);
+      }
+      newUser.image = req.file.path;
+    }
 
     if (newUser.password) {
       newUser.password = bcrypt.hashSync(newUser.password, 10);
@@ -99,7 +98,11 @@ const deleteuser = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    await User.findByIdAndDelete(id);
+    const user = await User.findByIdAndDelete(id);
+    if (user.image) {
+      deleteImgCloudinary(user.image);
+    }
+
     return res.status(200).json("User deleted");
   } catch (error) {
     next(error);

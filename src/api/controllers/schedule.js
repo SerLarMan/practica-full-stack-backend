@@ -29,6 +29,7 @@ const getScheduleByConcertId = async (req, res, next) => {
 const addSchedule = async (req, res, next) => {
   try {
     const newSchedule = new Schedule(req.body);
+    newSchedule.availableCapacity = req.body.location.capacity;
 
     const scheduleDB = await newSchedule.save();
     return res.status(201).json(scheduleDB);

@@ -1,3 +1,4 @@
+const Schedule = require("../models/Schedule");
 const Ticket = require("../models/Ticket");
 const User = require("../models/User");
 
@@ -17,15 +18,16 @@ const getTicketsUser = async (req, res, next) => {
 
 const buyTicket = async (req, res, next) => {
   try {
-    console.log(`body: ${JSON.stringify(req.body)}`);
     const { id } = req.params;
-    console.log(`params: ${id}`);
 
     const user = await User.findById(id);
-    console.log(`user: ${JSON.stringify(user)}`);
+
+    const schedule = await Schedule.findById(req.body._id);
+    schedule.availableCapacity -= 1;
+    await schedule.save();
 
     const ticket = new Ticket({
-      ...req.body,
+      schedule: req.body,
       user: user,
     });
 

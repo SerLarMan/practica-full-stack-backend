@@ -48,9 +48,11 @@ const seedDatabase = async () => {
     // Insertar schedules con referencias a locations y concerts
     const schedulesWithInfo = schedules.map((schedule) => ({
       date: new Date(schedule.date),
+      time: schedule.time,
       concert: concertMap.get(schedule.concertArtist),
       location: locationMap.get(schedule.locationName),
       price: schedule.price,
+      availableCapacity: schedule.availableCapacity,
     }));
     const insertedSchedules = await Schedule.insertMany(schedulesWithInfo);
     console.log("Schedules added:", insertedSchedules);

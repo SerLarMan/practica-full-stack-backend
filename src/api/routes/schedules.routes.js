@@ -12,8 +12,8 @@ const scheduleRouter = require("express").Router();
 
 scheduleRouter.get("/", getSchedules);
 scheduleRouter.get("/:concertId", getScheduleByConcertId);
-scheduleRouter.post("/", addSchedule);
-scheduleRouter.put("/:id", updateSchedule);
-scheduleRouter.delete("/:id", deleteSchedule);
+scheduleRouter.post("/", isAuth, addSchedule);
+scheduleRouter.put("/:id", isAuth, updateSchedule);
+scheduleRouter.delete("/:id", isAuth, deleteSchedule);
 
 module.exports = scheduleRouter;
