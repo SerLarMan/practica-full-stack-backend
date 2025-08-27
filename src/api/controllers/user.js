@@ -29,7 +29,7 @@ const registerUser = async (req, res, next) => {
     const userExists = await User.findOne({ email: user.email });
 
     if (userExists) {
-      return res.status(400).json("A user with this email already exists");
+      return res.status(400).json("Ya existe un usuario con este correo");
     }
 
     if(req.file) {
@@ -48,14 +48,14 @@ const loginUser = async (req, res, next) => {
     const user = await User.findOne({ email: req.body.email });
 
     if (!user) {
-      return res.status(400).json("Wrong email or password");
+      return res.status(400).json("Email o contraseña incorrectos");
     }
 
     if (bcrypt.compareSync(req.body.password, user.password)) {
       const token = generateToken(user._id, user.email);
       return res.status(200).json({ token, user });
     } else {
-      return res.status(400).json("Wrong email or password");
+      return res.status(400).json("Email o contraseña incorrectos");
     }
   } catch (error) {
     next(error);
@@ -67,7 +67,7 @@ const updateUser = async (req, res, next) => {
     const { id } = req.params;
 
     if (req.user._id.toString() !== id) {
-      return res.status(400).json("You can only modify your user");
+      return res.status(400).json("Solo puedes modificar tu usuario");
     }
 
     const newUser = new User(req.body);
@@ -103,7 +103,7 @@ const deleteuser = async (req, res, next) => {
       deleteImgCloudinary(user.image);
     }
 
-    return res.status(200).json("User deleted");
+    return res.status(200).json("Usuario eliminado");
   } catch (error) {
     next(error);
   }

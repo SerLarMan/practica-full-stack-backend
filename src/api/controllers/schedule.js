@@ -59,7 +59,7 @@ const deleteSchedule = async (req, res, next) => {
     const { id } = req.params;
 
     await Schedule.findByIdAndDelete(id);
-    return res.status(200).json("Schedule deleted");
+    return res.status(200).json("Fecha eliminada");
   } catch (error) {
     next(error);
   }

@@ -84,7 +84,7 @@ const deleteConcert = async (req, res, next) => {
     if (concert.image) {
       deleteImgCloudinary(concert.image);
     }
-    return res.status(200).json("Concert deleted");
+    return res.status(200).json("Concierto eliminado");
   } catch (error) {
     next(error);
   }

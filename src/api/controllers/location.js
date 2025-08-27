@@ -41,7 +41,7 @@ const deleteLocation = async (req, res, next) => {
     const { id } = req.params;
 
     await Location.findByIdAndDelete(id);
-    return res.status(200).json("Location deleted");
+    return res.status(200).json("Ubicación eliminada");
   } catch (error) {
     next(error);
   }
